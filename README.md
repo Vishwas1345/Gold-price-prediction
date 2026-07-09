@@ -1,8 +1,19 @@
+---
+title: Gold Price Predictor
+emoji: 🪙
+colorFrom: yellow
+colorTo: gray
+sdk: gradio
+sdk_version: 6.19.0
+app_file: app/app.py
+pinned: false
+---
+
 # Gold Price Predictor
 
-Predicts the GLD gold ETF price from same-day moves in the S&P 500, oil (USO), silver (SLV) and EUR/USD, using a Random Forest trained on returns — with an honest, time-based evaluation and a live Streamlit app.
+Predicts the GLD gold ETF price from same-day moves in the S&P 500, oil (USO), silver (SLV) and EUR/USD, using a Random Forest trained on returns — with an honest, time-based evaluation and a live Gradio app.
 
-**Live demo:** _coming soon (Streamlit Community Cloud)_
+**Live demo:** _coming soon (Hugging Face Spaces)_
 
 ![Actual vs predicted](results/actual_vs_predicted.png)
 
@@ -40,7 +51,7 @@ The same-day **silver move (`SLV_ret1`) dominates with ~70% importance**, which 
 
 ## The app
 
-Streamlit app with two modes:
+Gradio app with two tabs:
 
 - **Live** — pulls the latest SPX / USO / SLV / EUR-USD closes from Yahoo Finance (via `yfinance`), predicts today's gold price, and plots it against the recent GLD trend, with an uncertainty band from the spread of the forest's trees.
 - **Manual** — enter your own market values and watch the prediction update, with a sensitivity chart showing which inputs are pulling the prediction up or down.
@@ -58,9 +69,21 @@ python -m src.train
 # Run the tests
 python -m pytest tests/
 
-# Launch the app
-streamlit run app/app.py
+# Launch the app (opens on http://127.0.0.1:7860)
+python app/app.py
 ```
+
+## Deploying to Hugging Face Spaces
+
+The repo is Spaces-ready: the YAML front matter at the top of this README tells Spaces to use the **Gradio SDK** with `app/app.py` as the entry point.
+
+1. Create a new Space at [huggingface.co/new-space](https://huggingface.co/new-space) with SDK = **Gradio**.
+2. Push this repo to the Space:
+   ```bash
+   git remote add space https://huggingface.co/spaces/<user>/gold-price-predictor
+   git push space main
+   ```
+3. Spaces installs `requirements.txt` and serves the app. The committed `models/model.pkl` is used directly — no training happens at deploy time. If Yahoo Finance is unreachable from the Space, the app falls back to the bundled historical CSV and shows a warning.
 
 ## Project structure
 
@@ -71,7 +94,9 @@ src/
   model.py         # RandomForest wrapper: train/predict/save/load/importance
   train.py         # CLI: python -m src.train
   live_data.py     # latest market data via yfinance
-app/app.py         # Streamlit app (Live + Manual modes)
+  inference.py     # app-facing glue: data w/ fallback, prediction band, sensitivity
+app/app.py         # Gradio app (Live + Manual tabs)
+app/app_streamlit_legacy.py  # previous Streamlit version, kept for reference
 tests/             # feature & model tests
 notebooks/         # exploration notebook (imports from src/)
 data/              # 2008-2018 daily prices (GLD, SPX, USO, SLV, EUR/USD)
