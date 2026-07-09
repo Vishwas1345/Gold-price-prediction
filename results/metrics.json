@@ -1,0 +1,24 @@
+{
+  "original_random_split": {
+    "r2": 0.98993908444938,
+    "mae_usd": 1.2343384307860283
+  },
+  "original_time_split": {
+    "r2": -0.45285734078268725,
+    "mae_usd": 4.490254866288202
+  },
+  "final_time_split": {
+    "price_r2": 0.9861176625396902,
+    "price_mae_usd": 0.41693006541974104,
+    "return_r2": 0.6604439352589833
+  },
+  "naive_persistence_baseline": {
+    "price_r2": 0.9587744375151145,
+    "price_mae_usd": 0.7269298480176215
+  },
+  "test_period": {
+    "start": "2016-04-21",
+    "end": "2018-05-16",
+    "n_days": 454
+  }
+}

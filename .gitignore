@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data caches (yfinance and friends)
+*.cache
+.yfinance/
+
+# OS
+.DS_Store
